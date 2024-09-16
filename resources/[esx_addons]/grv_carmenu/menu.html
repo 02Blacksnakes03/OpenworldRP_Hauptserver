@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <script type="text/javascript" src="nui://game/ui/jquery.js"></script>
+  <link rel="stylesheet" type="text/css" href="grv_menu.css">
+  <script>
+    $(function() {
+      /* open the UI for user */
+      window.addEventListener('message', function(event) {
+        if(event.data.type == "init"){
+          $('body').css('display', 'block')          
+          setTimeout(function(){ document.getElementById("menu-toggler").checked = true;    }, 50);
+          
+        } else if (event.data.type == "destroy"){      
+          document.getElementById("menu-toggler").checked = false;       
+          setTimeout(function(){ $('body').css('display', 'none')     }, 400);
+        }    
+      });
+    }); 
+  </script>
+</head>
+<body>
+<nav class='menu'>
+  <input class='menu-toggler' id='menu-toggler' type='checkbox'>
+  <label for='menu-toggler'></label>
+  <ul>
+    <li class='menu-item' data-id="engine">
+      <a><img src="img/engine.png" /></a>
+    </li>
+    <li class='menu-item' data-id="repair">
+      <a><img src="img/repair.png" /></a>
+    </li>
+  </ul>
+</nav>
+
+<script type="text/javascript">
+  function openNav() {
+    document.getElementById("mySidenav").style.width = "200px";
+  }
+  function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+  }
+  $("#menu-toggler").click(function(){
+    $.post('http://grv_carmenu/closemenu', JSON.stringify({}));
+  });
+
+  $("li.menu-item").click(function(){
+    $.post('http://grv_carmenu/openmenu', JSON.stringify({id: $(this).data('id') }));
+  });
+
+/*  
+  window.addEventListener("keyup", function onEvent(event) {
+      if (event.key === "CapsLock") {
+          $.post('http://grv_carmenu/closemenu', JSON.stringify({}));
+      }
+  });
+  */
+  </script>
+</body>
+</html>
