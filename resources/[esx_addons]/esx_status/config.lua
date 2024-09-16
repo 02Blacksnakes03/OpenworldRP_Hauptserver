@@ -1,6 +1,14 @@
+--------------------------------------------
+--------------------------------------------
+--  Script    : ESX Status Bar            --
+--  Developer : Emilia Dev  	          --
+--  Contact   : github.com/Emilia-Dev     --
+--------------------------------------------
+--------------------------------------------
+--------------------------------------------
+
 Config = {}
 
 Config.StatusMax      = 1000000
-Config.TickTime       = 1000
-Config.UpdateInterval = 30000
-Config.Display        = true	-- Enable the esx_status bars (disable if you are using another HUD)
+Config.TickTime       = 250
+Config.UpdateInterval = 10000

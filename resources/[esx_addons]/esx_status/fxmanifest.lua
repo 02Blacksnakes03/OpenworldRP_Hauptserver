@@ -1,12 +1,9 @@
 fx_version 'adamant'
-
 game 'gta5'
 
-description 'ESX Status'
+description 'ESX By. Emilia Dev'
 
-version 'legacy'
-
-shared_script '@es_extended/imports.lua'
+version '1.1.0'
 
 server_scripts {
 	'@mysql-async/lib/MySQL.lua',

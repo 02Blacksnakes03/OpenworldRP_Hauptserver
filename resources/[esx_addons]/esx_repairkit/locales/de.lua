@@ -1,0 +1,18 @@
+Locales ['de'] = {
+	['used_kit']					= 'Du hast ~y~einen ~b~Werkzeugkasten benutzt.',
+	['must_be_outside']				= 'Du musst dich außerhalb deines Fahrzeugs befinden!',
+	['no_vehicle_nearby']			= 'Es ist ~r~kein Fahrzeug ~w~in der nähe.',
+	['finished_repair']				= '~g~Du hast dieses Fahrzeug repariert.',
+	['finished_tyre_repair']		= '~g~Du hast an diesem Fahrzeug die Reifen gewechselt.',
+	['abort_hint']					= 'Drücke ~INPUT_VEH_DUCK~ zum abbrechen',
+	['aborted_repair']				= 'Du hat die Reparatur ~r~abgebrochen~w~.',
+	['aborted_tyre_repair']			= 'Du hast das Reifenwechseln ~r~abgebrochen~w~.',
+	['car_destroy']					= '~r~Dein Motor ist zerstört.~w~',
+	['car_dead']					= '~r~Du kannst diesen Schaden nicht mehr reparieren.~w~',
+	['not_near_tyre']				= 'Du befindest dich nicht vor einem ~r~Reifen~w~.',
+	['not_near_engine']				= 'Du befindest dich nicht an einem ~r~Motor~w~.',
+	['MechIsOnline']				= 'Bitte rufe einen ~g~Mechaniker~w~.',
+	['ReparingEngine']				= 'Repariere den Motor...',
+	['ReparingTyre']				= 'Wechsel Reifen...',
+	['Cancelling']					= 'Breche ab ...',
+}

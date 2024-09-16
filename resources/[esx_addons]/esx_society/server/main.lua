@@ -1,5 +1,8 @@
+ESX = nil
 local Jobs = {}
 local RegisteredSocieties = {}
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 function GetSociety(name)
 	for i=1, #RegisteredSocieties, 1 do
@@ -167,25 +170,28 @@ end)
 ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, society)
 	local employees = {}
 
-	local xPlayers = ESX.GetExtendedPlayers('job', society)
-	for _, xPlayer in pairs(xPlayers) do
+	local xPlayers = ESX.GetPlayers()
+	for k, v in pairs(xPlayers) do
+		local xPlayer = ESX.GetPlayerFromId(v)
 
-		local name = xPlayer.name
-		if Config.EnableESXIdentity and name == GetPlayerName(xPlayer.source) then
+		local name = GetPlayerName(xPlayer.source)
+		if Config.EnableESXIdentity then
 			name = xPlayer.get('firstName') .. ' ' .. xPlayer.get('lastName')
 		end
 
-		table.insert(employees, {
-			name = name,
-			identifier = xPlayer.identifier,
-			job = {
-				name = society,
-				label = xPlayer.job.label,
-				grade = xPlayer.job.grade,
-				grade_name = xPlayer.job.grade_name,
-				grade_label = xPlayer.job.grade_label
-			}
-		})
+		if xPlayer.getJob().name == society then
+			table.insert(employees, {
+				name = name,
+				identifier = xPlayer.identifier,
+				job = {
+					name = society,
+					label = xPlayer.getJob().label,
+					grade = xPlayer.getJob().grade,
+					grade_name = xPlayer.getJob().grade_name,
+					grade_label = xPlayer.getJob().grade_label
+				}
+			})
+		end
 	end
 		
 	local query = "SELECT identifier, job_grade FROM `users` WHERE `job`=@job ORDER BY job_grade DESC"
@@ -212,7 +218,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 
 				if Config.EnableESXIdentity then
 					name = row.firstname .. ' ' .. row.lastname 
-				end
+				end 
 				
 				table.insert(employees, {
 					name = name,
@@ -295,11 +301,12 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 				['@grade']    = grade
 			}, function(rowsChanged)
 				Jobs[job].grades[tostring(grade)].salary = salary
+				local xPlayers = ESX.GetPlayers()
 
-				local xPlayers = ESX.GetExtendedPlayers('job', job)
-				for _, xTarget in pairs(xPlayers) do
+				for i=1, #xPlayers, 1 do
+					local xTarget = ESX.GetPlayerFromId(xPlayers[i])
 
-					if xTarget.job.grade == grade then
+					if xTarget.job.name == job and xTarget.job.grade == grade then
 						xTarget.setJob(job, grade)
 					end
 				end
@@ -316,28 +323,21 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 	end
 end)
 
-local getOnlinePlayers, onlinePlayers = false, {}
 ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
-	if getOnlinePlayers == false and next(onlinePlayers) == nil then -- Prevent multiple xPlayer loops from running in quick succession
-		getOnlinePlayers, onlinePlayers = true, {}
-		
-		local xPlayers = ESX.GetExtendedPlayers()
-		for _, xPlayer in pairs(xPlayers) do
-			table.insert(onlinePlayers, {
-				source = xPlayer.source,
-				identifier = xPlayer.identifier,
-				name = xPlayer.name,
-				job = xPlayer.job
-			})
-		end
-		cb(onlinePlayers)
-		getOnlinePlayers = false
-		Citizen.Wait(1000) -- For the next second any extra requests will receive the cached list
-		onlinePlayers = {}
-		return
+	local xPlayers = ESX.GetPlayers()
+	local players = {}
+
+	for i=1, #xPlayers, 1 do
+		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+		table.insert(players, {
+			source = xPlayer.source,
+			identifier = xPlayer.identifier,
+			name = xPlayer.name,
+			job = xPlayer.job
+		})
 	end
-	while getOnlinePlayers do Citizen.Wait(10) end -- Wait for the xPlayer loop to finish
-	cb(onlinePlayers)
+
+	cb(players)
 end)
 
 ESX.RegisterServerCallback('esx_society:getVehiclesInGarage', function(source, cb, societyName)

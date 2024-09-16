@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Register Form | lilwesyy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="./style.css">
+  <script type="text/javascript">
+
+function stopRKey(evt) {
+  var evt = (evt) ? evt : ((event) ? event : null);
+  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+  if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
+}
+
+document.onkeypress = stopRKey;
+
+</script>
+</head>
+<body>
+
+<h1>Phoenix-V</h1>
+
+<div id="charcreate">
+  <h2>Einreisebogen</h2><br>
+  <p>Fülle die Felder korrekt aus, du hast keine Möglichkeit dies nachtragend zu ändern!"<br>
+  Zum Fortfahren den Pfeil klicken, manchmal sind mehrere Clics notwendig.</p>
+</div>
+
+
+  <div class="dialog">
+  <form id="register">
+    <ul class="items"></ul>
+
+    <fieldset class="vorname enable">
+      <input type="text" name="vorname" style = "text-transform:capitalize;" id="firstname" placeholder="Vorname"/>
+      <div class="icon right button"><i class="arrow"></i></div>
+    </fieldset>
+    
+    <fieldset class="nachname">
+      <input type="text" name="nachname" style = "text-transform:capitalize;" id="lastname" placeholder="Nachname"/>
+      <div class="icon right button"><i class="arrow"></i></div>
+    </fieldset>
+
+    <fieldset class="geburtstag">
+      <input type="text" name="geburtstag" id="dateofbirth" placeholder="TT.MM.JJJJ"/>
+      <div class="icon right button"><i class="arrow"></i></div>
+    </fieldset>
+
+    <fieldset class="groeße">
+      <input type="number" name="groeße" id="height" min="120" max="200" placeholder="Körpergröße (120-200)"/>
+      <div class="icon right button"><i class="arrow"></i></div>
+    </fieldset>
+
+    <fieldset class="geschlecht">
+      <div class="md-radio md-radio-inline">
+        <input id="3" type="radio" value="m" name="sex" checked>
+        <label for="3">Männlich</label>
+      </div>
+      <div class="md-radio md-radio-inline">
+        <input id="4" type="radio" value="f" name="sex">
+        <label for="4">Weiblich</label>
+      </div>
+      <div class="icon right button"><i class="arrow"></i></div>
+    </fieldset>
+
+    <fieldset class="thanks">
+      <button id="submit" type="submit">Einreisebogen abgeben</button>
+    </fieldset>
+  </form>
+</div>
+
+
+
+<div class="footer">
+  <p>💜 2020 lilwesyy, modified by Chirimu@Phoenix-V 2021. All Rights Reserved</p>
+</div>
+  <script  src="scriptb.js"></script>
+  <script src="script.js" type="text/javascript"></script>
+</body>
+</html>

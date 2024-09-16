@@ -1,4 +1,7 @@
 local AccountsIndex, Accounts, SharedAccounts = {}, {}, {}
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 MySQL.ready(function()
 	local result = MySQL.Sync.fetchAll('SELECT * FROM addon_account')
