@@ -1,0 +1,42 @@
+[
+	{
+		"useBackgroundColour" : "true",
+		"backgroundColour" : "20,20,20",
+		"useBackgroundImage" : "false",
+		"backgroundImagePath" : "images/backgroundImg3.jpg",
+		"useTextColour" : "false",
+		"textColour" : "0,0,0",
+		"useBoldText" : "false",
+		"serverTitle" : "Nemesus TV Tutorial Server",
+		"playAudioInBackground" : "true",
+		"YTVideoID" : "xLKL-5V_9h4",
+		"videoVolume" : "5"
+	},
+	{
+		"rule1" : "RDM/VDM/SDM ist verboten!",
+		"rule2" : "Respektiere jeden!",
+		"rule3" : "Nutze keine Fehler/Exploits aus!",
+		"rule4" : "Cheaten ist verboten!",
+		"rule5" : "Wir dulden kein Rassismus!",
+		"rule6" : "Check mal NemesusTV auf Youtube aus ;)",
+		"rule7" : "Hab Spass!"
+	},
+	{
+		"servers1" : "Website: nemesus.de",
+		"servers2" : "Teamspeak: ts3.nemesus.de",
+		"servers3" : "Discord: discord.nemesus.de",
+		"servers4" : "Youtube: youtube.nemesus.de",
+		"servers5" : "",
+		"servers6" : "",
+		"servers7" : ""
+	},
+	{
+		"content1" : "Charaktersystem",
+		"content2" : "Fahrzeughändler mit Tuningsystem",
+		"content3" : "Whitelist",
+		"content4" : "Viele Jobs",
+		"content5" : "Bank & ATMs System",
+		"content6" : "Eigene Fahrzeuge",
+		"content7" : "und vieles mehr ..."
+	}
+]
