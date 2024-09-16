@@ -1,0 +1,10 @@
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyClient\bin\Debug\SaltyClient.net.dll
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyClient\bin\Debug\SaltyClient.net.pdb
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyClient\bin\Debug\CitizenFX.Core.Client.dll
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyClient\bin\Debug\Newtonsoft.Json.dll
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyClient\bin\Debug\CitizenFX.Core.Client.xml
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyClient\obj\Debug\SaltyClient.csprojAssemblyReference.cache
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyClient\obj\Debug\SaltyClient.csproj.CoreCompileInputs.cache
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyClient\obj\Debug\SaltyClient.csproj.CopyComplete
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyClient\obj\Debug\SaltyClient.net.dll
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyClient\obj\Debug\SaltyClient.net.pdb

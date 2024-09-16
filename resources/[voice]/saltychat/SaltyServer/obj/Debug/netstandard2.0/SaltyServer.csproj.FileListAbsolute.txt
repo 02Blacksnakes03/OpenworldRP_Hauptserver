@@ -1,0 +1,11 @@
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\bin\Debug\netstandard2.0\SaltyServer.net.deps.json
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\bin\Debug\netstandard2.0\SaltyServer.net.dll
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\bin\Debug\netstandard2.0\SaltyServer.net.pdb
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\bin\Debug\netstandard2.0\Newtonsoft.Json.dll
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\obj\Debug\netstandard2.0\SaltyServer.csprojAssemblyReference.cache
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\obj\Debug\netstandard2.0\SaltyServer.AssemblyInfoInputs.cache
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\obj\Debug\netstandard2.0\SaltyServer.AssemblyInfo.cs
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\obj\Debug\netstandard2.0\SaltyServer.csproj.CoreCompileInputs.cache
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\obj\Debug\netstandard2.0\SaltyServer.csproj.CopyComplete
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\obj\Debug\netstandard2.0\SaltyServer.net.dll
+J:\Tutorials\ESX_Server\txData\PlumeESXLegacy_E60098.base\resources\saltychat\SaltyServer\obj\Debug\netstandard2.0\SaltyServer.net.pdb
