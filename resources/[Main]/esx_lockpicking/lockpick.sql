@@ -1,0 +1,2 @@
+INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES ('Lockpick', 'lockpick', '1', '0', '1'); 
+INSERT INTO `shops` (`id`, `store`, `item`, `price`) VALUES (NULL, 'TwentyFourSeven', 'lockpick', '45'); 
