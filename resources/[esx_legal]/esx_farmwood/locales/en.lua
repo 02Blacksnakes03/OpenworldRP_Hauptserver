@@ -1,0 +1,21 @@
+Locales['en'] = {
+	['carry_for_leaves'] = 'Drücke ~INPUT_CONTEXT~ um Holz zu fällen',
+	['take_steel'] = 'Drücke ~INPUT_CONTEXT~ um Holzbretter herzustellen',
+	['sell_steel'] = 'Drücke ~INPUT_CONTEXT~ um Holzbretter zu verkaufen',
+	['make_grip'] = 'Drücke ~INPUT_CONTEXT~ um einen Waffengriff herzustellen',
+	['making_grip']	= 'Du Schnitzt dir einen Waffengriff aus Holz...',
+	['no_planks'] = 'Du hast keine Holzbretter mehr',
+	['bag_full'] = 'Du kannst nicht mehr tragen.',
+	['take_ore'] = 'Du fällst jetzt Bäume',
+	['you_do_not_have_enough_oranges'] = 'Du kannst nicht mehr tragen.',
+	['you_do_not_have_any_more_oranges'] = 'Du kannst keine Holzbretter mehr tragen',
+	['you_do_not_have_any_more_oranges2'] = 'Du kannst keine Waffengriffe mehr tragen',
+	['transform_steel'] = 'Du sägst dein Holz zurecht',
+	['you_do_not_have_juice_orage'] = 'Du hast keine Holzbretter mehr dabei',
+	['sell_juice'] = 'Du hast deine Holzbretter verkauft',
+	['sell_steel'] = 'Du verkaufst jetzt Holzbretter',
+	-- Blips 
+	['ore_picking'] = 'Wald',
+	['turns_from_steel'] = 'Sägewerk',
+	['sell_steel_blip'] = 'Holzankauf',
+}
