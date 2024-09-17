@@ -37,17 +37,6 @@ AddEventHandler('esx_ambulancejob:putInVehicle', function(target)
 	end
 end)
 
-RegisterServerEvent('esx_ambulancejob:OutVehicle')
-AddEventHandler('esx_ambulancejob:OutVehicle', function(target)
-	local xPlayer = ESX.GetPlayerFromId(source)
-
-	if xPlayer.job.name == 'ambulance' then
-		TriggerClientEvent('esx_ambulancejob:OutVehicle', target)
-	else
-		print(('esx_ambulancejob: %s hat versucht jemanden aus dem fahrzeug zu holen kein medic!'):format(xPlayer.identifier))
-	end
-end)
-
 TriggerEvent('esx_phone:registerNumber', 'ambulance', _U('alert_ambulance'), true, true)
 
 TriggerEvent('esx_society:registerSociety', 'ambulance', 'Ambulance', 'society_ambulance', 'society_ambulance', 'society_ambulance', {type = 'public'})
@@ -121,15 +110,6 @@ ESX.RegisterServerCallback('esx_ambulancejob:getItemAmount', function(source, cb
 
 	cb(quantity)
 end)
-
-ESX.RegisterServerCallback('esx_ambulancejob:getFineList', function(source, cb, category)
-	MySQL.Async.fetchAll('SELECT * FROM rechnungsarten_lsfd WHERE category = @category', {
-		['@category'] = category
-	}, function(fines)
-		cb(fines)
-	end)
-end)
-
 
 ESX.RegisterServerCallback('esx_ambulancejob:buyJobVehicle', function(source, cb, vehicleProps, type)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -236,8 +216,10 @@ AddEventHandler('esx_ambulancejob:giveItem', function(itemName)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.job.name ~= 'ambulance' then
+		print(('esx_ambulancejob: %s attempted to spawn in an item!'):format(xPlayer.identifier))
 		return
-	elseif (itemName ~= 'medikit' and itemName ~= 'bandage' and itemName ~= 'lsfdstandard') then
+	elseif (itemName ~= 'medikit' and itemName ~= 'bandage') then
+		print(('esx_ambulancejob: %s attempted to spawn in an item!'):format(xPlayer.identifier))
 		return
 	end
 
@@ -255,34 +237,10 @@ AddEventHandler('esx_ambulancejob:giveItem', function(itemName)
 	end
 end)
 
-RegisterCommand("revive", function(source, args)
-    if source ~= 0 then
-    local xPlayer = ESX.GetPlayerFromId(source)
-    if xPlayer.getGroup() == "superadmin" or xPlayer.getGroup() == "admin" or xPlayer.getGroup() == "mod" or xPlayer.getGroup() == "supporter"  or xPlayer.getGroup() == "teamleiter" then
-        if args[1] ~= nil then
-		    if GetPlayerName(tonumber(args[1])) ~= nil then
-			    TriggerClientEvent('esx_ambulancejob:revive', tonumber(args[1]))
-			    TriggerClientEvent('notifications', source, "#00FF00", "revive", "Du hast jemanden erfolgreich revived.")
-			    TriggerEvent('KorioZ-PersonalMenu:logMenuCommandRevive', "revive", xPlayer.source, args[1])
-		    end
-        else
-	    	TriggerClientEvent('esx_ambulancejob:revive', source)
-	    	TriggerClientEvent('notifications', source, "#00FF00", "revive", "Du hast dich revived.")
-	    	TriggerEvent('KorioZ-PersonalMenu:logMenuCommandRevive', "revive", xPlayer.source, "0")
-	    end
-    else
-        TriggerClientEvent('notifications', source, "#FF0000", "revive", "Du hast keine Rechte.")
-    end
-    else
-        if GetPlayerName(tonumber(args[1])) ~= nil then
-			TriggerClientEvent('esx_ambulancejob:revive', tonumber(args[1]))
-        end
-	end
-end)
---[[
-TriggerEvent('es:addGroupCommand', 'revive', 'supporter', function(source, args, user)
+TriggerEvent('es:addGroupCommand', 'revive', 'admin', function(source, args, user)
 	if args[1] ~= nil then
 		if GetPlayerName(tonumber(args[1])) ~= nil then
+			print(('esx_ambulancejob: %s used admin revive'):format(GetPlayerIdentifiers(source)[1]))
 			TriggerClientEvent('esx_ambulancejob:revive', tonumber(args[1]))
 		end
 	else
@@ -291,7 +249,6 @@ TriggerEvent('es:addGroupCommand', 'revive', 'supporter', function(source, args,
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, { help = _U('revive_help'), params = {{ name = 'id' }} })
-]]--
 
 ESX.RegisterUsableItem('medikit', function(source)
 	if not playersHealing[source] then
@@ -319,32 +276,31 @@ ESX.RegisterUsableItem('bandage', function(source)
 	end
 end)
 
-
 ESX.RegisterServerCallback('esx_ambulancejob:getDeathStatus', function(source, cb)
 	local identifier = GetPlayerIdentifiers(source)[1]
 
 	MySQL.Async.fetchScalar('SELECT is_dead FROM users WHERE identifier = @identifier', {
 		['@identifier'] = identifier
-	}, function(IsDead)
-		if IsDead then
+	}, function(isDead)
+		if isDead then
 			print(('esx_ambulancejob: %s attempted combat logging!'):format(identifier))
 		end
 
-		cb(IsDead)
+		cb(isDead)
 	end)
 end)
 
 RegisterServerEvent('esx_ambulancejob:setDeathStatus')
-AddEventHandler('esx_ambulancejob:setDeathStatus', function(IsDead)
+AddEventHandler('esx_ambulancejob:setDeathStatus', function(isDead)
 	local identifier = GetPlayerIdentifiers(source)[1]
 
-	if type(IsDead) ~= 'boolean' then
+	if type(isDead) ~= 'boolean' then
 		print(('esx_ambulancejob: %s attempted to parse something else than a boolean to setDeathStatus!'):format(identifier))
 		return
 	end
 
-	MySQL.Sync.execute('UPDATE users SET is_dead = @IsDead WHERE identifier = @identifier', {
+	MySQL.Sync.execute('UPDATE users SET is_dead = @isDead WHERE identifier = @identifier', {
 		['@identifier'] = identifier,
-		['@IsDead'] = IsDead
+		['@isDead'] = isDead
 	})
 end)

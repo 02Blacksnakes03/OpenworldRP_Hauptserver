@@ -31,7 +31,6 @@ function OpenAmbulanceActionsMenu()
 	end)
 end
 
-
 function OpenMobileAmbulanceActionsMenu()
 
 	ESX.UI.Menu.CloseAll()
@@ -40,8 +39,7 @@ function OpenMobileAmbulanceActionsMenu()
 		title    = _U('ambulance'),
 		align    = 'top-left',
 		elements = {
-			{label = _U('ems_menu'), value = 'citizen_interaction'},
-			{label = _U('dienstausweis'), value = 'dienstausweis_aktion'}
+			{label = _U('ems_menu'), value = 'citizen_interaction'}
 		}
 	}, function(data, menu)
 		if data.current.value == 'citizen_interaction' then
@@ -52,9 +50,7 @@ function OpenMobileAmbulanceActionsMenu()
 					{label = _U('ems_menu_revive'), value = 'revive'},
 					{label = _U('ems_menu_small'), value = 'small'},
 					{label = _U('ems_menu_big'), value = 'big'},
-					{label = _U('ems_menu_putincar'), value = 'put_in_vehicle'},
-					{label = _U('ems_menu_ausautoholen'), value = 'aus_auto_holen'},
-					{label = _U('ems_menu_rechnung'), value = 'rechnung_fraktion'},
+					{label = _U('ems_menu_putincar'), value = 'put_in_vehicle'}
 				}
 			}, function(data, menu)
 				if IsBusy then return end
@@ -166,48 +162,18 @@ function OpenMobileAmbulanceActionsMenu()
 
 					elseif data.current.value == 'put_in_vehicle' then
 						TriggerServerEvent('esx_ambulancejob:putInVehicle', GetPlayerServerId(closestPlayer))
-					elseif data.current.value == 'aus_auto_holen' then
-						TriggerServerEvent('esx_ambulancejob:OutVehicle', GetPlayerServerId(closestPlayer))
-					elseif data.current.value == 'rechnung_fraktion' then
-						OpenFineMenu(closestPlayer)
 					end
 				end
 			end, function(data, menu)
 				menu.close()
 			end)
-		elseif data.current.value == 'dienstausweis_aktion' then
-			local elements = {
-				{label = _U('dienstausweisgeben'), value = 'dienstausweisgeben'},
-		
-			}
-
-			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'dienstausweis_aktion', {
-				title    = _U('ems_menu'),
-				align    = 'top-left',
-				elements = elements
-			}, function(data2, menu2)
-				local player, distance = ESX.Game.GetClosestPlayer()
-				local action = data2.current.value
-				
-				if distance ~= -1 and distance <= 3.0 then   
-				if action == 'dienstausweisgeben' then
-				TriggerServerEvent('gxmp_dienstausweislsfd:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(player))
-				ESX.ShowNotification('Du hast jemanden dein Dienstausweis gezeigt')
-					
-		
-					end
-				else
-					ESX.ShowNotification(_U('no_players'))
-				end
-			end, function(data2, menu2)
-				menu2.close()
-			end)
 		end
+
 	end, function(data, menu)
 		menu.close()
 	end)
-end	
-		
+end
+
 function FastTravel(coords, heading)
 	local playerPed = PlayerPedId()
 
@@ -225,55 +191,6 @@ function FastTravel(coords, heading)
 		end
 	end)
 end
-
-function OpenFineMenu(player)
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'fine', {
-		title    = _U('fine'),
-		align    = 'top-left',
-		elements = {
-			{label = _U('traffic_offense'), value = 0}
-	}}, function(data, menu)
-		OpenFineCategoryMenu(player, data.current.value)
-	end, function(data, menu)
-		menu.close()
-	end)
-end
-
-function OpenFineCategoryMenu(player, category)
-	ESX.TriggerServerCallback('esx_ambulancejob:getFineList', function(fines)
-		local elements = {}
-
-		for k,fine in ipairs(fines) do
-			table.insert(elements, {
-				label     = ('%s <span style="color:green;">%s</span>'):format(fine.label, _U('armory_item', ESX.Math.GroupDigits(fine.amount))),
-				value     = fine.id,
-				amount    = fine.amount,
-				fineLabel = fine.label
-			})
-		end
-
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'fine_category', {
-			title    = _U('fine'),
-			align    = 'top-left',
-			elements = elements
-		}, function(data, menu)
-			menu.close()
-
-			if Config.EnablePlayerManagement then
-				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), 'society_ambulance', _U('fine_total', data.current.fineLabel), data.current.amount)
-			else
-				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), '', _U('fine_total', data.current.fineLabel), data.current.amount)
-			end
-
-			ESX.SetTimeout(300, function()
-				OpenFineCategoryMenu(player, category)
-			end)
-		end, function(data, menu)
-			menu.close()
-		end)
-	end, category)
-end
-
 
 -- Draw markers & Marker logic
 Citizen.CreateThread(function()
@@ -950,8 +867,7 @@ function OpenPharmacyMenu()
 		align    = 'top-left',
 		elements = {
 			{label = _U('pharmacy_take', _U('medikit')), value = 'medikit'},
-			{label = _U('pharmacy_take', _U('bandage')), value = 'bandage'},
-			{label = _U('pharmacy_take', _U('lsfdstandard')), value = 'lsfdstandard'},
+			{label = _U('pharmacy_take', _U('bandage')), value = 'bandage'}
 		}
 	}, function(data, menu)
 		TriggerServerEvent('esx_ambulancejob:giveItem', data.current.value)

@@ -11,10 +11,8 @@ Keys = {
 }
 
 local FirstSpawn, PlayerLoaded = true, false
-local usedmedikit = false
-local usedbandage = false
-local IsDead = false
 
+IsDead = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -31,24 +29,21 @@ Citizen.CreateThread(function()
 	ESX.PlayerData = ESX.GetPlayerData()
 end)
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-	ESX.PlayerData = xPlayer
-	PlayerLoaded = true
+Citizen.CreateThread(function()
+	RegisterNetEvent('esx:playerLoaded')
+	AddEventHandler('esx:playerLoaded', function (xPlayer)
+		while ESX == nil do
+			Citizen.Wait(0)
+		end
+		ESX.PlayerData = xPlayer
+		PlayerLoaded = true
+	end)
 end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
---Für ErsteHilfe
-RegisterNetEvent('esx_ambulancejob:receiveReset')
-AddEventHandler('esx_ambulancejob:receiveReset', function(state, bleedoutTimer, addTime)
-	if state then
-		bleedoutTimer = bleedoutTimer + addTime
-	end
-end)
-
 
 AddEventHandler('playerSpawned', function()
 	IsDead = false
@@ -57,17 +52,21 @@ AddEventHandler('playerSpawned', function()
 		exports.spawnmanager:setAutoSpawn(false) -- disable respawn
 		FirstSpawn = false
 
-		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(IsDead)
-			if IsDead and Config.AntiCombat then
+		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
+			if isDead and Config.AntiCombatLog then
 				while not PlayerLoaded do
-					Citizen.Wait(2000)
+					Citizen.Wait(1000)
 				end
-				Citizen.Wait(2000)
-				SetEntityHealth(PlayerPedId(), 0) -- Killt Spieler der Combat Logging macht und wieder Joint
+
+				ESX.ShowNotification(_U('combatlog_message'))
+				RemoveItemsAfterRPDeath()
 			end
 		end)
 	end
 end)
+
+
+
 
 
 
@@ -94,7 +93,7 @@ Citizen.CreateThread(function()
 
 		if IsDead then
 			DisableAllControlActions(0)
-			EnableControlAction(0, Keys['Z'], true)
+			EnableControlAction(0, Keys['G'], true)
 			EnableControlAction(0, Keys['T'], true)
 			EnableControlAction(0, Keys['E'], true)
 		else
@@ -103,77 +102,46 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
-function loadAnimDict(dict)
-	while (not HasAnimDictLoaded(dict)) do
-		RequestAnimDict(dict)
-		Citizen.Wait(5)
-	end
-end
-
-
-	
 function OnPlayerDeath()
-    IsDead = true
-    ESX.UI.Menu.CloseAll()
-    TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)
-	TriggerEvent('esx_ambulancejob:animation')
+	IsDead = true
+	ESX.UI.Menu.CloseAll()
+	TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)
 
-    StartDeathTimer()
-    StartDistressSignal()
+	StartDeathTimer()
+	StartDistressSignal()
 
-	StartScreenEffect('DeathFailOut', 0, true)
+	StartScreenEffect('DeathFailOut', 0, false)
 end
-
---Ragdoll beim Tot sein
-RegisterNetEvent('esx_ambulancejob:animation')
-AddEventHandler('esx_ambulancejob:animation', function()
-
-    Citizen.CreateThread(function() 
-        local playerPed = GetPlayerPed(-1)
-		SetPedCanRagdoll(playerPed, true)
-		ClearPedTasksImmediately(playerPed)
-	end)
-end)
-
 
 RegisterNetEvent('esx_ambulancejob:useItem')
 AddEventHandler('esx_ambulancejob:useItem', function(itemName)
-	usedmedikit = not usedmedikit
-	usedbandage = not usedbandage
 	ESX.UI.Menu.CloseAll()
 
 	if itemName == 'medikit' then
-		exports['gxmp_progress']:startUI(5000)
 		local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01' -- TODO better animations
 		local playerPed = PlayerPedId()
 
 		ESX.Streaming.RequestAnimDict(lib, function()
 			TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
 
-			Citizen.Wait(5000)  
-		    ClearPedTasksImmediately(playerPed)
+			Citizen.Wait(500)
 			while IsEntityPlayingAnim(playerPed, lib, anim, 3) do
 				Citizen.Wait(0)
 				DisableAllControlActions(0)
-				
 			end
-
+	
 			TriggerEvent('esx_ambulancejob:heal', 'big', true)
 			ESX.ShowNotification(_U('used_medikit'))
-			usedmedikit = false
 		end)
 
 	elseif itemName == 'bandage' then
-		exports['gxmp_progress']:startUI(5000)
 		local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01' -- TODO better animations
 		local playerPed = PlayerPedId()
 
 		ESX.Streaming.RequestAnimDict(lib, function()
 			TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
 
-			Citizen.Wait(5000)  
-		    ClearPedTasksImmediately(playerPed)
+			Citizen.Wait(500)
 			while IsEntityPlayingAnim(playerPed, lib, anim, 3) do
 				Citizen.Wait(0)
 				DisableAllControlActions(0)
@@ -181,40 +149,12 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 
 			TriggerEvent('esx_ambulancejob:heal', 'small', true)
 			ESX.ShowNotification(_U('used_bandage'))
-			usedbandage = false
 		end)
 	end
 end)
 
-
---Keys blockieren beim Verbandskasten Usen
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-        local playerPed = GetPlayerPed(-1)
-        if usedmedikit then
-            DisableControlAction(0, 140, true)
-            DisableControlAction(0, 74, true)
-			DisableControlAction(0, 2, true) 
-			DisableControlAction(0, 263, true) 
-			DisableControlAction(0, 45, true) 
-			DisableControlAction(0, 22, true) 
-			DisableControlAction(0, 44, true) 
-			DisableControlAction(0, 37, true) 
-			DisableControlAction(0, 288,  true) 
-			DisableControlAction(0, 289, true) 
-			DisableControlAction(0, 170, true) 
-			DisableControlAction(0, 167, true) 
-            DisableControlAction(1, 254, true)
-            DisableControlAction(0, 47, true)  
-        end
-    end
-end)
-
-
 function StartDistressSignal()
 	Citizen.CreateThread(function()
-		local playerPed = GetPlayerPed(-1)
 		local timer = Config.BleedoutTimer
 
 		while timer > 0 and IsDead do
@@ -232,13 +172,8 @@ function StartDistressSignal()
 			AddTextComponentSubstringPlayerName(_U('distress_send'))
 			EndTextCommandDisplayText(0.175, 0.805)
 
-		    if IsControlPressed(0, Keys['Z']) then
-				local playerPed = PlayerPedId()
-	            local coords    = GetEntityCoords(playerPed)
-            	local position = {x = coords.x, y = coords.y, z = coords.z}
-
-            	TriggerServerEvent("d-phone:server:sendservicemessage", GetPlayerServerId(PlayerId()), "Bewusstlose Person", "LSMD", 0, 1, position, "5")
-            	TriggerEvent("d-notification", "Dispatch wurde gesendet.", 5000,  "rgba(255, 0, 0, 0.8)")
+			if IsControlPressed(0, Keys['G']) then
+				SendDistressSignal()
 
 				Citizen.CreateThread(function()
 					Citizen.Wait(1000 * 60 * 5)
@@ -251,6 +186,15 @@ function StartDistressSignal()
 			end
 		end
 	end)
+end
+
+function SendDistressSignal()
+	local playerPed = PlayerPedId()
+	local coords    = GetEntityCoords(playerPed)
+	local position = {x = coords.x, y = coords.y, z = coords.z}
+
+	TriggerServerEvent("d-phone:server:sendservicemessage", GetPlayerServerId(PlayerId()), "Unconscious person", "yourambulancejoblabel", 0, 1, position, "5")
+	TriggerEvent("d-notification", "Service Message sended", 5000,  "rgba(255, 0, 0, 0.8)")
 end
 
 function DrawGenericTextThisFrame()
@@ -311,8 +255,7 @@ function StartDeathTimer()
 	end)
 
 	Citizen.CreateThread(function()
-		local text
-		local playerPed = GetPlayerPed(-1)
+		local text, timeHeld
 
 		-- early respawn timer
 		while earlySpawnTimer > 0 and IsDead do
@@ -334,21 +277,21 @@ function StartDeathTimer()
 			if not Config.EarlyRespawnFine then
 				text = text .. _U('respawn_bleedout_prompt')
 
-				if IsEntityDead(playerPed) then
+				if IsControlPressed(0, Keys['E']) and timeHeld > 60 then
 					RemoveItemsAfterRPDeath()
 					break
 				end
 			elseif Config.EarlyRespawnFine and canPayFine then
 				text = text .. _U('respawn_bleedout_fine', ESX.Math.GroupDigits(Config.EarlyRespawnFineAmount))
 
-				if IsEntityDead(playerPed) then
+				if IsControlPressed(0, Keys['E']) and timeHeld > 60 then
 					TriggerServerEvent('esx_ambulancejob:payFine')
 					RemoveItemsAfterRPDeath()
 					break
 				end
 			end
 
-			if IsDead then
+			if IsControlPressed(0, Keys['E']) then
 				timeHeld = timeHeld + 1
 			else
 				timeHeld = 0
@@ -427,8 +370,7 @@ AddEventHandler('esx_ambulancejob:revive', function()
 	local coords = GetEntityCoords(playerPed)
 
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
-	IsDead = false
-	SetPedCanRagdoll(playerPed, true)
+
 	Citizen.CreateThread(function()
 		DoScreenFadeOut(800)
 
@@ -450,7 +392,6 @@ AddEventHandler('esx_ambulancejob:revive', function()
 
 		StopScreenEffect('DeathFailOut')
 		DoScreenFadeIn(800)
-		TriggerServerEvent('KorioZ-PersonalMenu:logRespawn', GetPlayerServerId(NetworkGetEntityOwner(GetPlayerPed(-1))))
 	end)
 end)
 
